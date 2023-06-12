@@ -1,9 +1,29 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const path = require('path');
+const nextConfig = {
+    reactStrictMode: true,
+    webpack(config) {
+        config.module.rules.push({
+            test: /\.svg$/,
+            use: ['@svgr/webpack'],
+        });
+        return config;
+    },
+    sassOptions: {
+        includePaths: [path.join(__dirname, 'styles')],
+        prependData: `@import "~/styles/variables";`,
+    },
+    experimental: {
+        appDir: true
+    },
+    async rewrites() {
+        return [
+            {
+                source: '/',
+                destination: '/homepage',
+            },
+        ];
+    },
+};
 
-module.exports = nextConfig
-
-/* SASS */
-
-const withSass = require('@zeit/next-sass');
-module.exports = withSass();
+module.exports = nextConfig;
